@@ -3,7 +3,6 @@ from src.utils import *
 
 
 def main():
-    # TODO:
     # add more kernels
     # Kernel parameters
     kernel_type: 1  # 0: Gaussian, 1: Mex-hat, 2: Oscillatory.
