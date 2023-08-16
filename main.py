@@ -5,9 +5,12 @@ from src.utils import *
 def main():
     # add more kernels
     # Kernel parameters
-    kernel_type: 1  # 0: Gaussian, 1: Mex-hat, 2: Oscillatory.
+    kernel_type = 1  # 0: Gaussian, 1: Mex-hat, 2: Oscillatory.
 
-    # Parameters of the mex-hat kernel: a_ex, s_ex, a_in, s_in, w_in.
+    # For gaussian kernel: a_ex, s_ex, w_in.
+    # kernel_pars = [1, 0.4, 0.2]
+
+    # For mex-hat kernel: a_ex, s_ex, a_in, s_in, w_in.
     kernel_pars = [1, 0.3, 0.4, 0.5, 0.05]
 
     # Field parameters
@@ -19,9 +22,9 @@ def main():
     # Input parameters
     input_flag = True  # Flag indicating if inputs are present.
     input_shape = [0.7, 0.3]  # parameters of gaussian inputs: amplitude, sigma.
-    input_position = [-2, 2]  # input_position, input_onset_time and input_duration must have the same length.
-    input_onset_time = [2, 5]
-    input_duration = [1, 1]
+    input_position = [-2]  # input_position, input_onset_time and input_duration must have the same length.
+    input_onset_time = [2]
+    input_duration = [1]
 
     input_pars = [input_shape, input_position, input_onset_time, input_duration]
 
@@ -29,7 +32,7 @@ def main():
     ic_shape = [0, 0.5, 0.2]  # position, amplitude, sigma
 
     # Integrate the model
-    field_activity, inputs = simulate_amari(field_pars, kernel_pars, input_flag, input_pars, ic_shape)
+    field_activity, inputs = simulate_amari(field_pars, kernel_type, kernel_pars, input_flag, input_pars, ic_shape)
 
     # Plotting
 

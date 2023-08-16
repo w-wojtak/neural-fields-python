@@ -5,7 +5,11 @@ def kernel_mex(x, a_ex, s_ex, a_in, s_in, w_in):
     return a_ex * np.exp(-0.5 * x ** 2 / s_ex ** 2) - a_in * np.exp(-0.5 * x ** 2 / s_in ** 2) - w_in
 
 
-def simulate_amari(field_pars, kernel_pars, input_flag, input_pars, ic_shape):
+def kernel_gauss(x, a_ex, s_ex, w_in):
+    return a_ex * np.exp(-0.5 * x ** 2 / s_ex ** 2) - w_in
+
+
+def simulate_amari(field_pars, kernel_type, kernel_pars, input_flag, input_pars, ic_shape):
     x_lim, t_lim, dx, dt, theta = field_pars
 
     x = np.arange(-x_lim, x_lim + dx, dx)
@@ -18,7 +22,10 @@ def simulate_amari(field_pars, kernel_pars, input_flag, input_pars, ic_shape):
     u_field = u_0
 
     # kernel and its fft
-    w_hat = np.fft.fft(kernel_mex(x, *kernel_pars))
+    if kernel_type == 0:
+        w_hat = np.fft.fft(kernel_gauss(x, *kernel_pars))
+    elif kernel_type == 1:
+        w_hat = np.fft.fft(kernel_mex(x, *kernel_pars))
 
     for i in range(0, len(t)):
         f_hat = np.fft.fft(np.heaviside(u_field - theta, 1))
