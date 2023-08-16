@@ -9,6 +9,11 @@ def kernel_gauss(x, a_ex, s_ex, w_in):
     return a_ex * np.exp(-0.5 * x ** 2 / s_ex ** 2) - w_in
 
 
+def kernel_osc(x, a, b, alpha):
+    return a * (np.exp(-b*abs(x)) * ((b * np.sin(abs(alpha*x)))+np.cos(alpha*x)))
+    # A * (exp(-b * abs(x)). * ((b * sin(abs(alpha * x))) + cos(alpha * x)))
+
+
 def simulate_amari(field_pars, kernel_type, kernel_pars, input_flag, input_pars, ic_shape):
     x_lim, t_lim, dx, dt, theta = field_pars
 
@@ -26,6 +31,8 @@ def simulate_amari(field_pars, kernel_type, kernel_pars, input_flag, input_pars,
         w_hat = np.fft.fft(kernel_gauss(x, *kernel_pars))
     elif kernel_type == 1:
         w_hat = np.fft.fft(kernel_mex(x, *kernel_pars))
+    elif kernel_type == 2:
+        w_hat = np.fft.fft(kernel_osc(x, *kernel_pars))
 
     for i in range(0, len(t)):
         f_hat = np.fft.fft(np.heaviside(u_field - theta, 1))
