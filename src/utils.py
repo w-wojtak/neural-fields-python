@@ -11,7 +11,6 @@ def kernel_gauss(x, a_ex, s_ex, w_in):
 
 def kernel_osc(x, a, b, alpha):
     return a * (np.exp(-b*abs(x)) * ((b * np.sin(abs(alpha*x)))+np.cos(alpha*x)))
-    # A * (exp(-b * abs(x)). * ((b * sin(abs(alpha * x))) + cos(alpha * x)))
 
 
 def simulate_amari(field_pars, kernel_type, kernel_pars, input_flag, input_pars, ic_shape):

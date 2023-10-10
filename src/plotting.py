@@ -16,7 +16,10 @@ def plot_final_state_1d(activity, field_pars):
     plt.xlim(-x_lim, x_lim)
     plt.xlabel('x')
     plt.ylabel('u(x)')
+    fig = plt.gcf()
     plt.show()
+
+    return fig
 
 
 def plot_animate_1d(activity, field_pars, inputs, input_flag):
@@ -145,7 +148,10 @@ def plot_space_time_flat(activity, field_pars):
     plt.title('u(x,t)')
     plt.tight_layout()
     plt.gcf().set_dpi(300)
+    fig = plt.gcf()
     plt.show()
+
+    return fig
 
 
 def plot_space_time_3d(activity, field_pars):
