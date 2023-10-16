@@ -1,9 +1,6 @@
 from src.plotting import *
 from src.utils import *
 
-# Kernel parameters
-kernel_type = 2  # 0: Gaussian, 1: Mex-hat, 2: Oscillatory.
-
 # For oscillatory kernel: a, b, alpha.
 kernel_pars = [1, 0.7, 0.9]
 
@@ -40,12 +37,7 @@ u_field = u_0
 h_u = h_0 * np.ones(np.shape(x))
 
 # kernel and its fft
-if kernel_type == 0:
-    w_hat = np.fft.fft(kernel_gauss(x, *kernel_pars))
-elif kernel_type == 1:
-    w_hat = np.fft.fft(kernel_mex(x, *kernel_pars))
-elif kernel_type == 2:
-    w_hat = np.fft.fft(kernel_osc(x, *kernel_pars))
+w_hat = np.fft.fft(kernel_osc(x, *kernel_pars))
 
 for i in range(0, len(t)):
     f = np.heaviside(u_field - theta, 1)
