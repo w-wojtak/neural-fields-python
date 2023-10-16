@@ -11,6 +11,11 @@ kernel_pars = [1, 0.7, 0.9]
 x_lim, t_lim = 80, 100  # Limits for space and time. Space is set as [-x_lim, x_lim], time as [0, t_lim].
 dx, dt = 0.05, 0.1  # Spatial and temporal discretization.
 theta = 1  # Threshold for the activation function.
+
+# Remaining parameters
+tau_h = 20      # time constant of the threshold adaptation
+h_0 = 0        # initial value of h-level
+
 field_pars = [x_lim, t_lim, dx, dt, theta]
 
 # Input parameters
@@ -22,18 +27,48 @@ input_duration = [1, 1, 1, 1, 1]
 
 input_pars = [input_shape, input_position, input_onset_time, input_duration]
 
-# Initial condition - gaussian (if input_flag = False).
-ic_shape = [0, 2.5, 0.5]  # position, amplitude, sigma
-
 # Integrate the model
-field_activity, inputs = simulate_amari(field_pars, kernel_type, kernel_pars, input_flag, input_pars, ic_shape)
+x = np.arange(-x_lim, x_lim + dx, dx)
+t = np.arange(0, t_lim + dt, dt)
+
+history_u = np.zeros([len(t), len(x)])
+
+inputs = get_inputs(x, t, dt, input_pars, input_flag)
+u_0 = h_0 * np.ones(np.shape(x))
+u_field = u_0
+
+h_u = h_0 * np.ones(np.shape(x))
+
+# kernel and its fft
+if kernel_type == 0:
+    w_hat = np.fft.fft(kernel_gauss(x, *kernel_pars))
+elif kernel_type == 1:
+    w_hat = np.fft.fft(kernel_mex(x, *kernel_pars))
+elif kernel_type == 2:
+    w_hat = np.fft.fft(kernel_osc(x, *kernel_pars))
+
+for i in range(0, len(t)):
+    f = np.heaviside(u_field - theta, 1)
+    f_hat = np.fft.fft(f)
+    conv = dx * np.fft.ifftshift(np.real(np.fft.ifft(f_hat * w_hat)))
+    h_u = h_u + dt / tau_h * f  # threshold adaptation
+    u_field = u_field + dt * (-u_field + conv + inputs[i, :] + h_u)
+    history_u[i, :] = u_field
 
 # Plotting
 
 # Plot of u(x,t) at time t=end.
-fig = plot_final_state_1d(field_activity, field_pars)
+fig = plot_final_state_1d(history_u, field_pars)
 
 # Flat space-time image of the field activity.
 # fig = plot_space_time_flat(field_activity, field_pars)
 
 fig.savefig('figures/sequence_osc_final.png')
+
+# Specify the file name (you can use any file extension, but .npy is commonly used)
+file_name_field = "sequence_memory.npy"
+file_name_pars = "field_parameters.npy"
+
+# Save the array to the file
+np.save(file_name_field, history_u)
+np.save(file_name_pars, field_pars)
