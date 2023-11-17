@@ -55,7 +55,7 @@ fig = plot_final_state_1d(history_u, field_pars)
 # Flat space-time image of the field activity.
 # fig = plot_space_time_flat(field_activity, field_pars)
 
-fig.savefig('figures/sequence_osc_final.png')
+# fig.savefig('figures/sequence_osc_final.png')
 
 # Specify the file name (you can use any file extension, but .npy is commonly used)
 file_name_field = "sequence_memory.npy"

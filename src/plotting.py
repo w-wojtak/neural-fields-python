@@ -4,6 +4,29 @@ import time
 from matplotlib.widgets import Slider, Button
 
 
+def plot_activity_at_time_step(activity, field_pars, time_step):
+    """
+    Plots the activity at a given time step.
+    """
+    x_lim, _, dx, dt, _ = field_pars
+    x = np.arange(-x_lim, x_lim + dx, dx)
+
+    plt.plot(x, activity)
+    plt.xlim(-x_lim, x_lim)
+    plt.xlabel('x')
+    plt.ylabel('u(x)')
+    # add title with the current time step
+    plt.title(f't = {time_step * dt:.2f}')
+
+    # Draw the updated figure
+    plt.draw()
+
+    # Add a short pause to allow the plot to update
+    plt.pause(0.1)
+
+    return plt.gcf()
+
+
 def plot_final_state_1d(activity, field_pars):
     """
     Plots the final state of u(x,t) at time t=end.
@@ -261,7 +284,7 @@ def plot_time_courses(activity, field_pars, inputs, input_position):
             ax.plot(t, activity[:, bump_center])
             ax.plot(t, inputs[:, bump_center])
     else:
-        ax.plot(t, activity[:, int(len(x)/2)])
+        ax.plot(t, activity[:, int(len(x) / 2)])
 
     ax.plot(t, theta * np.ones(np.shape(t)), label='theta', linestyle='dashed')
     ax.legend()
